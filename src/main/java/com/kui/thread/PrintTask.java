@@ -6,25 +6,32 @@ import java.util.Random;
  * Created by xingshukui on 2016/4/11.
  */
 public class PrintTask implements Runnable{
+    private String name;
+    private Object prev;
+    private Object self;
 
-    private final int sleepTime;
-    private final String taskName;
-    private final static Random random = new Random();
-
-    public PrintTask(String taskName) {
-        this.taskName = taskName;
-        sleepTime = random.nextInt(5000);
+    public PrintTask(String name, Object prev, Object self) {
+        this.name = name;
+        this.prev = prev;
+        this.self = self;
     }
 
     @Override
     public void run() {
-
-        System.out.println("sleep for millisecond "+taskName+"--"+sleepTime);
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.printf(taskName,"exception");
+        int count = 10;
+        while (count>0){
+            synchronized (prev){
+                synchronized (self){
+                    System.out.println(this.name);
+                    count--;
+                    self.notify();
+                }
+                try {
+                    prev.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
