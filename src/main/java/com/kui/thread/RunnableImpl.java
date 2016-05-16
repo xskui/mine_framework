@@ -49,7 +49,8 @@ public class RunnableImpl implements Runnable {
 
 
         new Thread(pa).start();
-        Thread.sleep(100);  //确保按顺序A、B、C执行
+        //确保按顺序A、B、C执行
+        Thread.sleep(100);
         new Thread(pb).start();
         Thread.sleep(100);
         new Thread(pc).start();
